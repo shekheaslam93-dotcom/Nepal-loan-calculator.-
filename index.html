@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepali Loan Calculator - Free Online Tool</title>
+    <meta name="description" content="Free Nepali loan calculator - calculate EMI, interest and payment schedule for loans in NPR">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"></script>
+    <style>
+        .nepali-pattern {
+            background-image: url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/0fb86939-6701-4df5-89e8-21b5c2ac09a8.png');
+            background-size: cover;
+            background-position: center;
+        }
+        .currency-sign::before {
+            content: "NPR ";
+        }
+        .payment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        @media (max-width: 768px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="nepali-pattern h-40 w-full flex items-center justify-center">
+        <h1 class="text-4xl font-bold text-white text-center py-4 bg-black bg-opacity-40 px-8 rounded-lg">
+            नेपाली ऋण क्याल्कुलेटर
+            <br>
+            Nepali Loan Calculator
+        </h1>
+    </div>
+
+    <div class="container mx-auto px-4 py-2 max-w-6xl text-center">
+        <!-- AdSense Leaderboard -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+             data-ad-slot="YOUR_LEADERBOARD_SLOT"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <div class="container mx-auto px-4 py-4 text-center">
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded">
+            <p>This calculator is ready to publish! Choose a free hosting option below.</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <div class="calculator-grid grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Sidebar Ad -->
+            <div class="bg-white rounded-lg shadow-lg p-4 text-center">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                     data-ad-slot="YOUR_SIDEBAR_SLOT"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+
+            <!-- Calculator Form -->
+            <div class="bg-white rounded-lg shadow-lg p-6 col-span-1">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">ऋण विवरण प्रविष्ट गर्नुहोस् <br> Loan Details</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="loanAmount" class="block text-gray-700 mb-2">ऋण रकम (NPR) <br> Loan Amount</label>
+                        <input type="number" id="loanAmount" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                               placeholder="e.g. 1000000" min="0">
+                    </div>
+                    
+                    <div>
+                        <label for="interestRate" class="block text-gray-700 mb-2">ब्याज दर (% वार्षिक) <br> Interest Rate (% per year)</label>
+                        <input type="number" id="interestRate" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                               placeholder="e.g. 12" min="0" step="0.01">
+                    </div>
+                    
+                    <div>
+                        <label for="loanTerm" class="block text-gray-700 mb-2">ऋण अवधि (वर्षमा) <br> Loan Term (in years)</label>
+                        <input type="number" id="loanTerm" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                               placeholder="e.g. 5" min="1" max="30">
+                    </div>
+                    
+                    <button onclick="calculateLoan()" 
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                        गणना गर्नुहोस् <br> Calculate
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="col-span-1 md:col-span-2 space-y-6">
+                <div id="results" class="hidden">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="payment-card bg-white rounded-lg shadow-lg p-4 text-center">
+                            <div class="text-gray-500 text-sm">मासिक भुक्तानी <br> Monthly Payment</div>
+                            <div class="text-2xl font-bold currency-sign text-blue-600" id="monthlyPayment"></div>
+                        </div>
+                        <div class="payment-card bg-white rounded-lg shadow-lg p-4 text-center">
+                            <div class="text-gray-500 text-sm">कुल ब्याज <br> Total Interest</div>
+                            <div class="text-2xl font-bold currency-sign text-red-500" id="totalInterest"></div>
+                        </div>
+                        <div class="payment-card bg-white rounded-lg shadow-lg p-4 text-center">
+                            <div class="text-gray-500 text-sm">कुल भुक्तानी <br> Total Payment</div>
+                            <div class="text-2xl font-bold currency-sign text-green-600" id="totalPayment"></div>
+                        </div>
+                    </div>
+
+                    <!-- Amortization Schedule -->
+                    <div class="mt-8 bg-white rounded-lg shadow-lg overflow-hidden">
+                        <h3 class="bg-gray-800 text-white p-4">भुक्तानी तालिका <br> Payment Schedule</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left">महिना <br> Month</th>
+                                        <th class="px-4 py-2 text-left">मूलधन <br> Principal</th>
+                                        <th class="px-4 py-2 text-left">ब्याज <br> Interest</th>
+                                        <th class="px-4 py-2 text-left">भुक्तानी <br> Payment</th>
+                                        <th class="px-4 py-2 text-left">बाँकी <br> Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="schedule" class="divide-y divide-gray-200"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Section -->
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                    <div class="flex items-start">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/54d68a84-4338-4c40-83d4-de5b7ea3d3dd.png" alt="Information icon" class="mr-3">
+                        <div>
+                            <h3 class="font-bold text-gray-800">ऋण सम्बन्धि जानकारी <br> Loan Information</h3>
+                            <p class="text-gray-600 text-sm mt-1">
+                                यो क्याल्कुलेटरले आफ्नो ऋण भुक्तानी र ब्याजको अनुमान गर्न सहयोग गर्दछ। यो अनुमान मात्र हो, वास्तविक ऋण शर्तहरू ऋणदाता संस्थाले निर्धारण गर्छन्।
+                                <br><br>
+                                This calculator helps estimate your loan payments and interest. This is only an estimate, actual loan terms are determined by lenders.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-4 max-w-6xl text-center">
+        <!-- Footer Ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+             data-ad-slot="YOUR_FOOTER_SLOT"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <footer class="bg-gray-800 text-white py-6 mt-4">
+        <div class="container mx-auto px-4 text-center">
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ab2272ae-59b8-4a2f-9a97-01e690448ac5.png" alt="Nepali financial services logo with traditional elements" class="mx-auto mb-4">
+            <p class="text-gray-300 text-sm">© 2023 Nepali Loan Calculator. All rights reserved.</p>
+            <p class="text-gray-400 text-xs mt-2">Publish for free using: <a href="https://pages.github.com/" target="_blank" class="text-blue-300 hover:underline">GitHub Pages</a> | 
+            <a href="https://vercel.com/" target="_blank" class="text-blue-300 hover:underline">Vercel</a> | 
+            <a href="https://www.netlify.com/" target="_blank" class="text-blue-300 hover:underline">Netlify</a> | 
+            <a href="https://pages.cloudflare.com/" target="_blank" class="text-blue-300 hover:underline">Cloudflare Pages</a></p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateLoan() {
+            // Get input values
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+            const annualInterestRate = parseFloat(document.getElementById('interestRate').value) / 100;
+            const loanTermYears = parseFloat(document.getElementById('loanTerm').value);
+            
+            // Calculate monthly interest rate and total payments
+            const monthlyInterestRate = annualInterestRate / 12;
+            const numberOfPayments = loanTermYears * 12;
+            
+            // Calculate monthly payment (EMI)
+            const monthlyPayment = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments)) / 
+                                 (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+            
+            // Calculate total payment and total interest
+            const totalPayment = monthlyPayment * numberOfPayments;
+            const totalInterest = totalPayment - loanAmount;
+            
+            // Display results
+            document.getElementById('monthlyPayment').textContent = monthlyPayment.toFixed(2);
+            document.getElementById('totalInterest').textContent = totalInterest.toFixed(2);
+            document.getElementById('totalPayment').textContent = totalPayment.toFixed(2);
+            
+            // Generate amortization schedule
+            generateSchedule(loanAmount, monthlyInterestRate, numberOfPayments, monthlyPayment);
+            
+            // Show results
+            document.getElementById('results').classList.remove('hidden');
+        }
+        
+        function generateSchedule(principal, monthlyRate, payments, monthlyPayment) {
+            let balance = principal;
+            const scheduleTable = document.getElementById('schedule');
+            scheduleTable.innerHTML = '';
+            
+            for (let i = 1; i <= payments; i++) {
+                const interestPayment = balance * monthlyRate;
+                const principalPayment = monthlyPayment - interestPayment;
+                balance -= principalPayment;
+                
+                // Format the balance to avoid negative values due to rounding
+                if (i === payments) {
+                    balance = 0;
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-4 py-2">${i}</td>
+                    <td class="px-4 py-2">NPR ${principalPayment.toFixed(2)}</td>
+                    <td class="px-4 py-2">NPR ${interestPayment.toFixed(2)}</td>
+                    <td class="px-4 py-2">NPR ${monthlyPayment.toFixed(2)}</td>
+                    <td class="px-4 py-2">NPR ${balance > 0 ? balance.toFixed(2) : '0.00'}</td>
+                `;
+                
+                // Alternate row colors
+                if (i % 2 === 0) {
+                    row.classList.add('bg-gray-50');
+                }
+                
+                scheduleTable.appendChild(row);
+            }
+        }
+        
+        // Format NPR currency
+        function formatNPR(amount) {
+            return new Intl.NumberFormat('en-NP', { 
+                style: 'currency', 
+                currency: 'NPR',
+                minimumFractionDigits: 2
+            }).format(amount);
+        }
+    </script>
+</body>
+<!-- 
+Publishing Instructions:
+
+1. GitHub Pages (Easiest for beginners):
+   - Create a new GitHub repository
+   - Upload this file as index.html
+   - Go to Settings > Pages and enable GitHub Pages
+   - Your site will be live at username.github.io/repository-name
+
+2. Netlify (Fastest deployment):
+   - Drag & drop this HTML file to Netlify's upload area
+   - Your site will be live instantly with a netlify.app domain
+
+3. Vercel:
+   - Create a new project and import your repository
+   - Deploy with default settings
+   - Free SSL and automatic deployments included
+
+4. Cloudflare Pages:
+   - Connect your git repository
+   - Set build command to "echo 'No build needed'"
+   - Set publish directory to "/"
+-->
+</html>
+
