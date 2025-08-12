@@ -281,4 +281,203 @@ Publishing Instructions:
    - Set publish directory to "/"
 -->
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nepali Loan Calculator - Free Online Tool</title>
+<meta name="description" content="Free Nepali loan calculator - calculate EMI, interest and payment schedule for loans in NPR">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+    .nepali-pattern {
+        background-image: url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/0fb86939-6701-4df5-89e8-21b5c2ac09a8.png');
+        background-size: cover;
+        background-position: center;
+    }
+    .currency-sign::before {
+        content: "NPR ";
+    }
+    .payment-card {
+        transition: all 0.3s ease-in-out;
+    }
+    .payment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    @media (max-width: 768px) {
+        .calculator-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    /* Dark mode */
+    .dark body { background-color: #1f2937; color: white; }
+    .dark .bg-white { background-color: #374151; color: white; }
+    .dark input, .dark table { background-color: #4b5563; color: white; }
+</style>
+</head>
+<body class="bg-gray-50 font-sans transition-colors duration-500">
 
+<!-- Header -->
+<div class="nepali-pattern h-40 w-full flex items-center justify-center">
+    <h1 class="text-4xl font-bold text-white text-center py-4 bg-black bg-opacity-40 px-8 rounded-lg">
+        नेपाली ऋण क्याल्कुलेटर <br> Nepali Loan Calculator
+    </h1>
+</div>
+
+<!-- Buttons -->
+<div class="container mx-auto px-4 py-4 flex flex-wrap justify-center gap-3">
+    <button onclick="toggleDarkMode()" class="bg-gray-800 text-white px-4 py-2 rounded-lg">🌙 Dark Mode</button>
+    <button onclick="clearForm()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">Clear</button>
+</div>
+
+<!-- Calculator -->
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+    <div class="calculator-grid grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <!-- Input Form -->
+        <div class="bg-white rounded-lg shadow-lg p-6 col-span-1">
+            <h2 class="text-2xl font-bold mb-4">ऋण विवरण प्रविष्ट गर्नुहोस् <br> Loan Details</h2>
+            <div class="space-y-4">
+                <div>
+                    <label>Loan Amount (NPR)</label>
+                    <input type="text" id="loanAmount" oninput="formatCurrency(this)" class="w-full px-4 py-2 border rounded-lg" placeholder="e.g. 1000000">
+                </div>
+                <div>
+                    <label>Interest Rate (% per year)</label>
+                    <input type="number" id="interestRate" class="w-full px-4 py-2 border rounded-lg" placeholder="e.g. 12">
+                </div>
+                <div>
+                    <label>Loan Term (years)</label>
+                    <input type="number" id="loanTerm" class="w-full px-4 py-2 border rounded-lg" placeholder="e.g. 5">
+                </div>
+                <button onclick="calculateLoan()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg">Calculate</button>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="col-span-1 md:col-span-2 space-y-6">
+            <div id="results" class="hidden animate-fadeIn">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="payment-card bg-white rounded-lg shadow-lg p-4 text-center">
+                        <div class="text-sm">Monthly Payment</div>
+                        <div class="text-2xl font-bold text-blue-600" id="monthlyPayment"></div>
+                    </div>
+                    <div class="payment-card bg-white rounded-lg shadow-lg p-4 text-center">
+                        <div class="text-sm">Total Interest</div>
+                        <div class="text-2xl font-bold text-red-500" id="totalInterest"></div>
+                    </div>
+                    <div class="payment-card bg-white rounded-lg shadow-lg p-4 text-center">
+                        <div class="text-sm">Total Payment</div>
+                        <div class="text-2xl font-bold text-green-600" id="totalPayment"></div>
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="flex flex-wrap gap-3 mt-4">
+                    <button onclick="downloadImage()" class="bg-green-600 text-white px-4 py-2 rounded-lg">📷 Save as Image</button>
+                    <button onclick="window.print()" class="bg-yellow-500 text-white px-4 py-2 rounded-lg">🖨 Print Schedule</button>
+                </div>
+
+                <!-- Schedule -->
+                <div class="mt-8 bg-white rounded-lg shadow-lg overflow-hidden" id="scheduleSection">
+                    <h3 class="bg-gray-800 text-white p-4">Payment Schedule</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-4 py-2">Month</th>
+                                    <th class="px-4 py-2">Principal</th>
+                                    <th class="px-4 py-2">Interest</th>
+                                    <th class="px-4 py-2">Payment</th>
+                                    <th class="px-4 py-2">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schedule" class="divide-y"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-6 mt-4">
+    <div class="container mx-auto px-4 text-center">
+        <p class="text-sm">© 2025 Nepali Loan Calculator | Developed by <span class="text-yellow-300 font-bold">Aslam Shekhe</span></p>
+    </div>
+</footer>
+
+<script>
+function formatCurrency(input) {
+    let value = input.value.replace(/\D/g, '');
+    input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function toggleDarkMode() {
+    document.documentElement.classList.toggle('dark');
+}
+
+function clearForm() {
+    document.getElementById('loanAmount').value = '';
+    document.getElementById('interestRate').value = '';
+    document.getElementById('loanTerm').value = '';
+    document.getElementById('results').classList.add('hidden');
+}
+
+function calculateLoan() {
+    const loanAmount = parseFloat(document.getElementById('loanAmount').value.replace(/,/g, ''));
+    const annualRate = parseFloat(document.getElementById('interestRate').value) / 100;
+    const years = parseFloat(document.getElementById('loanTerm').value);
+    if (!loanAmount || !annualRate || !years) { alert("Please fill all fields!"); return; }
+
+    const monthlyRate = annualRate / 12;
+    const totalPayments = years * 12;
+    const monthlyPayment = (loanAmount * monthlyRate * Math.pow(1+monthlyRate, totalPayments)) / (Math.pow(1+monthlyRate, totalPayments)-1);
+    const totalPayment = monthlyPayment * totalPayments;
+    const totalInterest = totalPayment - loanAmount;
+
+    document.getElementById('monthlyPayment').textContent = monthlyPayment.toFixed(2);
+    document.getElementById('totalInterest').textContent = totalInterest.toFixed(2);
+    document.getElementById('totalPayment').textContent = totalPayment.toFixed(2);
+
+    generateSchedule(loanAmount, monthlyRate, totalPayments, monthlyPayment);
+    document.getElementById('results').classList.remove('hidden');
+}
+
+function generateSchedule(principal, monthlyRate, payments, monthlyPayment) {
+    let balance = principal;
+    const schedule = document.getElementById('schedule');
+    schedule.innerHTML = '';
+    for (let i = 1; i <= payments; i++) {
+        const interest = balance * monthlyRate;
+        const principalPayment = monthlyPayment - interest;
+        balance -= principalPayment;
+        if (i === payments) balance = 0;
+
+        schedule.innerHTML += `
+            <tr>
+                <td class="px-4 py-2">${i}</td>
+                <td class="px-4 py-2">NPR ${principalPayment.toFixed(2)}</td>
+                <td class="px-4 py-2">NPR ${interest.toFixed(2)}</td>
+                <td class="px-4 py-2">NPR ${monthlyPayment.toFixed(2)}</td>
+                <td class="px-4 py-2">NPR ${balance.toFixed(2)}</td>
+            </tr>
+        `;
+    }
+}
+
+function downloadImage() {
+    html2canvas(document.getElementById('results')).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'loan-calculation.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    });
+}
+</script>
+</body>
+</html>
